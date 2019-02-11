@@ -153,7 +153,8 @@ public class DFSFolder extends DFSPath implements DFSContent {
     } catch (IOException ioe) {
       ioe.printStackTrace();
     }
-    doRefresh();
+//    doRefresh();
+    refresh();
   }
 
   /*

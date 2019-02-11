@@ -94,7 +94,7 @@ public class ActionProvider extends CommonActionProvider {
 
     menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
         DFSActions.DOWNLOAD));
-
+    
     if (site == null)
       return;
 
@@ -112,10 +112,20 @@ public class ActionProvider extends CommonActionProvider {
     Object element = issel.getFirstElement();
 
     if (element instanceof DFSFile) {
+      //获取当前文件/目录路径
+      menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
+          DFSActions.GET_PATH));
+      menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
+          DFSActions.GET_FULL_PATH));
       menu.appendToGroup(ICommonMenuConstants.GROUP_OPEN, new DFSAction(
           DFSActions.OPEN));
 
     } else if (element instanceof DFSFolder) {
+      //获取当前文件/目录路径
+      menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
+          DFSActions.GET_PATH));
+      menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
+          DFSActions.GET_FULL_PATH));
       menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(
           DFSActions.MKDIR));
       menu.appendToGroup(ICommonMenuConstants.GROUP_NEW, new DFSAction(

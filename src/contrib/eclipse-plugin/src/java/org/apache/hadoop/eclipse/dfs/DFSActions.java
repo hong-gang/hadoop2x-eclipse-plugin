@@ -23,7 +23,8 @@ public enum DFSActions {
   DELETE("Delete"), REFRESH("Refresh"), DOWNLOAD("Download from DFS..."), OPEN(
       "View"), MKDIR("Create new directory..."), UPLOAD_FILES(
       "Upload files to DFS..."), UPLOAD_DIR("Upload directory to DFS..."), RECONNECT(
-      "Reconnect"), DISCONNECT("Disconnect");
+      "Reconnect"), DISCONNECT("Disconnect"), GET_PATH("Copy file path"), 
+      GET_FULL_PATH("Copy file full path");
 
   final String title;
 

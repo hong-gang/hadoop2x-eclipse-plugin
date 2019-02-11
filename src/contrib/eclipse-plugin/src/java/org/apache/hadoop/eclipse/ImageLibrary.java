@@ -125,6 +125,8 @@ public class ImageLibrary {
     newSharedImage("dfs.browser.action.delete",
         ISharedImages.IMG_TOOL_DELETE);
     newImage("dfs.browser.action.refresh", "refresh.png");
+    newImage("dfs.browser.action.get_path", "copy.gif");
+    newImage("dfs.browser.action.get_full_path", "copy.gif");
 
     /*
      * Wizards

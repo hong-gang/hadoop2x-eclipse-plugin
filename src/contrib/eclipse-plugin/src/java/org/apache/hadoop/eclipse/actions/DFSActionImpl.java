@@ -45,6 +45,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -83,6 +86,14 @@ public class DFSActionImpl implements IObjectActionDelegate {
       public void run() {
         try {
           switch (DFSActions.getById(actionId)) {
+            case GET_PATH: {
+              getPath(ss,0);
+              break;
+            }
+            case GET_FULL_PATH: {
+              getPath(ss,1);
+              break;
+            }
             case DELETE: {
               delete(ss);
               break;
@@ -246,7 +257,17 @@ public class DFSActionImpl implements IObjectActionDelegate {
             monitor.done();
 
             // Update the UI
-            folder.doRefresh();
+//            folder.doRefresh();
+            //
+            /*
+             * desc:修复bug：上载之后不刷新
+             * reason: 由于doRefresh()方法中未有将子集children设置为null
+             *       - 从而viewer在refresh的getChildren方法里获取的仍然是没有变化的子集
+             *      -- 该子集在上载在上载之后，仅在远程服务器创建，未有添加目录结构的子集
+             *       - 因此修改为调用refresh()，将children设置为null后，viewer中会调用
+             *      --  loadDFSFolderChildren()重新加载
+             * */
+            folder.refresh();
           }
         });
   }
@@ -330,6 +351,40 @@ public class DFSActionImpl implements IObjectActionDelegate {
             monitor.done();
           }
         });
+  }
+  
+  /**
+   * 获取所选择文件的路径
+   * @param selection
+   * @param pathId 路径选项
+   */
+  private void getPath(IStructuredSelection selection, int pathId) {
+    
+    Clipboard clipboard = new Clipboard(Display.getCurrent());
+    
+    StringBuffer sBuffer = new StringBuffer();
+    
+    /*
+     * List<DFSFile> dfsFiles = filterSelection(DFSFile.class, selection);
+     * 
+     * if (dfsFiles != null && !dfsFiles.isEmpty()) { for (DFSFile file :
+     * dfsFiles) { sBuffer.append(file.getPath()).append("\n"); } }
+     */
+    List<DFSPath> dfsPaths = filterSelection(DFSPath.class, selection);
+    if (dfsPaths != null && !dfsPaths.isEmpty()) {
+      for (DFSPath dfsPath : dfsPaths) {
+        String pathString = dfsPath.getPath().toString();
+        if (pathId == 0) {
+          pathString = dfsPath.getPath().toUri().getPath();
+        }
+        sBuffer.append(pathString);
+      }
+    }
+    
+    Transfer[] transfer = new Transfer[] {TextTransfer.getInstance()};
+    
+    clipboard.setContents(new String[] {sBuffer.toString()}, transfer);
+    
   }
 
   /**
